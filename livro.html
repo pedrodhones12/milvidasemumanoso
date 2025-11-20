@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIL VIDAS EM UM ANO SÓ</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<h1>MIL VIDAS EM UM ANO SÓ</h1>
+
+<button id="comprarBtn" class="botao">Comprar agora + cálculo de frete</button>
+
+<div id="resultadoFrete"></div>
+
+<script>
+document.getElementById("comprarBtn").addEventListener("click", async () => {
+
+    const cepDestino = prompt("Digite seu CEP para calcular o frete:");
+
+    if (!cepDestino) return;
+
+    const resposta = await fetch(`/api/frete?cep=${cepDestino}`);
+    const dados = await resposta.json();
+
+    if (dados.erro) {
+        alert("Erro ao calcular frete");
+        return;
+    }
+
+    document.getElementById("resultadoFrete").innerHTML = `
+        <h3>Frete calculado</h3>
+        <p><b>Transportadora:</b> ${dados.transportadora}</p>
+        <p><b>Preço:</b> R$ ${dados.preco}</p>
+        <p><b>Prazo:</b> ${dados.prazo} dias úteis</p>
+
+        <a href="https://melhorenvio.com.br/checkout" target="_blank">
+            <button class="botao">Finalizar Compra</button>
+        </a>
+    `;
+});
+</script>
+
+</body>
+</html>
