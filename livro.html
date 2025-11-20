@@ -1,49 +1,58 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIL VIDAS EM UM ANO SÓ</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mil Vidas - Calcular Frete</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
-
 <body>
+  <h1>MIL VIDAS EM UM ANO SÓ</h1>
 
-<h1>MIL VIDAS EM UM ANO SÓ</h1>
+  <button id="comprarBtn" class="botao">Comprar agora + cálculo de frete</button>
 
-<button id="comprarBtn" class="botao">Comprar agora + cálculo de frete</button>
+  <div id="resultadoFrete" style="max-width:500px;margin:20px auto;"></div>
 
-<div id="resultadoFrete"></div>
+  <script>
+    document.getElementById("comprarBtn").addEventListener("click", async () => {
+      const cepDestino = prompt("Digite seu CEP (somente números):");
+      if (!cepDestino) return alert("Operação cancelada.");
 
-<script>
-document.getElementById("comprarBtn").addEventListener("click", async () => {
+      const cepLimpo = cepDestino.replace(/\D/g, "");
+      if (cepLimpo.length !== 8) return alert("CEP inválido. Digite 8 dígitos.");
 
-    const cepDestino = prompt("Digite seu CEP para calcular o frete:");
+      try {
+        const resposta = await fetch(`/api/frete?cep=${cepLimpo}`);
+        const dados = await resposta.json();
 
-    if (!cepDestino) return;
+        if (dados.erro) {
+          document.getElementById("resultadoFrete").innerHTML = 
+            `<div style="background:#fee; color:#900; padding:12px; border-radius:8px;">
+               Erro: ${dados.mensagem || "Não foi possível calcular o frete."}
+               <pre style="white-space:pre-wrap">${JSON.stringify(dados.detalle || dados, null, 2)}</pre>
+             </div>`;
+          return;
+        }
 
-    const resposta = await fetch(`/api/frete?cep=${cepDestino}`);
-    const dados = await resposta.json();
-
-    if (dados.erro) {
-        alert("Erro ao calcular frete");
-        return;
-    }
-
-    document.getElementById("resultadoFrete").innerHTML = `
-        <h3>Frete calculado</h3>
-        <p><b>Transportadora:</b> ${dados.transportadora}</p>
-        <p><b>Preço:</b> R$ ${dados.preco}</p>
-        <p><b>Prazo:</b> ${dados.prazo} dias úteis</p>
-
-        <a href="https://melhorenvio.com.br/checkout" target="_blank">
-            <button class="botao">Finalizar Compra</button>
-        </a>
-    `;
-});
-</script>
-
+        document.getElementById("resultadoFrete").innerHTML = `
+          <div style="background:#fff; color:#111; padding:15px; border-radius:8px;">
+            <h3 style="margin-top:0">Frete calculado</h3>
+            <p><b>Transportadora:</b> ${dados.transportadora}</p>
+            <p><b>Preço:</b> R$ ${dados.preco}</p>
+            <p><b>Prazo:</b> ${dados.prazo} dias úteis</p>
+            <a href="https://melhorenvio.com.br/checkout" target="_blank">
+              <button style="padding:10px 16px;border-radius:6px;background:#C1121F;color:#fff;border:none;cursor:pointer;">
+                Finalizar Compra
+              </button>
+            </a>
+          </div>
+        `;
+      } catch (err) {
+        document.getElementById("resultadoFrete").innerHTML = `<div style="color:#f55">Erro ao chamar a API: ${err.message}</div>`;
+      }
+    });
+  </script>
 </body>
 </html>
+
 
