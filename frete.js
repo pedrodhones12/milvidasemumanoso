@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     }
 
     // ATENÇÃO: coloque aqui seu CEP de origem corretamente (8 dígitos, sem traço ou com traço)
-    const cepRemetente = "45680000"; // <-- substitua pelo seu CEP real (ex: 45680000)
+    const cepRemetente = "45890000"; // <-- substitua pelo seu CEP real (ex: 45680000)
 
     const payload = {
       from: { postal_code: cepRemetente },
