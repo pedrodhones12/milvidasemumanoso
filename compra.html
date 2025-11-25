@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Comprar — MIL VIDAS EM UM ANO SÓ</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* Pequeno estilo inline para garantir bom visual sem depender de CSS externo */
+    .container{max-width:720px;margin:32px auto;padding:16px}
+    .poster{max-width:200px;display:block;margin-bottom:16px}
+    .botao{padding:10px 16px;border:0;border-radius:6px;cursor:pointer}
+    #resultadoFrete{margin-top:18px}
+    .linha{margin-bottom:8px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MIL VIDAS EM UM ANO SÓ</h1>
+    <img src="/img/posterdomeio.png" alt="Pôster do Livro" class="poster">
+    <p>Preço do livro: <strong>R$ 55,00</strong></p>
+
+    <div class="linha">
+      <label for="cep">CEP para cálculo do frete:</label><br>
+      <input id="cep" placeholder="Ex: 45600-000" />
+      <button id="calcularFrete" class="botao">Calcular Frete</button>
+    </div>
+
+    <div id="resultadoFrete"></div>
+
+    <div style="margin-top:18px;">
+      <!-- Botão de pagamento apenas do valor do livro, conforme combinado -->
+      <button id="pagarBtn" class="botao">Pagar R$55,00</button>
+    </div>
+  </div>
+
+<script>
+const NUBANK_CHECKOUT = "https://checkout.nubank.com.br/czQ5k6L6pWapd48"; // link confirmado
+
+document.getElementById('pagarBtn').addEventListener('click', () => {
+  // redireciona exatamente para o link NuBank
+  window.location.href = NUBANK_CHECKOUT;
+});
+
+async function mostrarMensagemErro(msg){
+  document.getElementById('resultadoFrete').innerHTML = `<p style="color:crimson">${msg}</p>`;
+}
+
+document.getElementById('calcularFrete').addEventListener('click', async () => {
+  const cep = document.getElementById('cep').value.trim();
+  if(!cep){
+    return mostrarMensagemErro('Digite um CEP válido.');
+  }
+
+  document.getElementById('resultadoFrete').innerHTML = `<p>Calculando...</p>`;
+
+  try {
+    const res = await fetch('/api/frete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cep })
+    });
+
+    const dados = await res.json();
+
+    // garantia: o backend sempre retorna os campos listados (mesmo em fallback)
+    if(!dados.success){
+      return mostrarMensagemErro(dados.mensagem || 'Erro ao calcular frete.');
+    }
+
+    const precoFormatado = Number(dados.preco).toFixed(2);
+    const totalFormatado = Number(dados.total).toFixed(2);
+
+    document.getElementById('resultadoFrete').innerHTML = `
+      <h3>Frete calculado</h3>
+      <p><b>Transportadora:</b> ${dados.transportadora}</p>
+      <p><b>Preço do frete:</b> R$ ${precoFormatado}</p>
+      <p><b>Prazo estimado:</b> ${dados.prazo} dias úteis</p>
+      <p><b>Destino:</b> ${dados.cidade} - ${dados.estado}</p>
+      <p><b>Valor do produto:</b> R$ ${Number(dados.valor_produto).toFixed(2)}</p>
+      <p><b>Total (produto + frete):</b> R$ ${totalFormatado}</p>
+
+      <div style="margin-top:12px;">
+        <button id="pagarFreteBtn" class="botao">Pagar R$55,00 (checkout NuBank)</button>
+      </div>
+    `;
+
+    document.getElementById('pagarFreteBtn').addEventListener('click', () => {
+      // checkout NuBank só do produto — frete mostrado separadamente como pedido
+      window.location.href = NUBANK_CHECKOUT;
+    });
+
+  } catch (err) {
+    console.error(err);
+    mostrarMensagemErro('Erro inesperado ao calcular frete.');
+  }
+});
+</script>
+</body>
+</html>
