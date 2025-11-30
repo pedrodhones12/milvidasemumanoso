@@ -1,0 +1,11 @@
+{
+  "name": "mp-backend-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "mercadopago": "^1.5.13"
+  }
+}
