@@ -3,55 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mil Vidas - Calcular Frete</title>
+  <title>Comprar — MIL VIDAS EM UM ANO SÓ</title>
   <link rel="stylesheet" href="/style.css">
+  <style>
+    /* Pequeno estilo inline para garantir bom visual sem depender de CSS externo */
+    .container{max-width:720px;margin:32px auto;padding:16px}
+    .poster{max-width:200px;display:block;margin-bottom:16px}
+    .botao{padding:10px 16px;border:0;border-radius:6px;cursor:pointer}
+    #resultadoFrete{margin-top:18px}
+    .linha{margin-bottom:8px}
+  </style>
 </head>
 <body>
-  <h1>MIL VIDAS EM UM ANO SÓ</h1>
+  <div class="container">
+    <h1>MIL VIDAS EM UM ANO SÓ</h1>
+    <img src="/img/posterdomeio.png" alt="Pôster do Livro" class="poster">
+    <p>Preço do livro: <strong>R$ 55,00</strong></p>
 
-  <button id="comprarBtn" class="botao">Comprar agora + cálculo de frete</button>
+  
 
-  <div id="resultadoFrete" style="max-width:500px;margin:20px auto;"></div>
+    <div id="resultadoFrete"></div>
 
-  <script>
-    document.getElementById("comprarBtn").addEventListener("click", async () => {
-      const cepDestino = prompt("Digite seu CEP (somente números):");
-      if (!cepDestino) return alert("Operação cancelada.");
+    <div style="margin-top:18px;">
+      <!-- Botão de pagamento apenas do valor do livro, conforme combinado -->
+      <button id="pagarBtn" class="botao">Pagar R$55,00</button>
+    </div>
+  </div>
 
-      const cepLimpo = cepDestino.replace(/\D/g, "");
-      if (cepLimpo.length !== 8) return alert("CEP inválido. Digite 8 dígitos.");
+<script>
+const NUBANK_CHECKOUT = "https://checkout.nubank.com.br/czQ5k6L6pWapd48"; // link confirmado
 
-      try {
-        const resposta = await fetch(`/api/frete?cep=${cepLimpo}`);
-        const dados = await resposta.json();
+document.getElementById('pagarBtn').addEventListener('click', () => {
+  // redireciona exatamente para o link NuBank
+  window.location.href = NUBANK_CHECKOUT;
+});
 
-        if (dados.erro) {
-          document.getElementById("resultadoFrete").innerHTML = 
-            `<div style="background:#fee; color:#900; padding:12px; border-radius:8px;">
-               Erro: ${dados.mensagem || "Não foi possível calcular o frete."}
-               <pre style="white-space:pre-wrap">${JSON.stringify(dados.detalle || dados, null, 2)}</pre>
-             </div>`;
-          return;
-        }
+async function mostrarMensagemErro(msg){
+  document.getElementById('resultadoFrete').innerHTML = `<p style="color:crimson">${msg}</p>`;
+}
 
-        document.getElementById("resultadoFrete").innerHTML = `
-          <div style="background:#fff; color:#111; padding:15px; border-radius:8px;">
-            <h3 style="margin-top:0">Frete calculado</h3>
-            <p><b>Transportadora:</b> ${dados.transportadora}</p>
-            <p><b>Preço:</b> R$ ${dados.preco}</p>
-            <p><b>Prazo:</b> ${dados.prazo} dias úteis</p>
-            <a href="https://melhorenvio.com.br/checkout" target="_blank">
-              <button style="padding:10px 16px;border-radius:6px;background:#C1121F;color:#fff;border:none;cursor:pointer;">
-                Finalizar Compra
-              </button>
-            </a>
-          </div>
-        `;
-      } catch (err) {
-        document.getElementById("resultadoFrete").innerHTML = `<div style="color:#f55">Erro ao chamar a API: ${err.message}</div>`;
-      }
-    });
-  </script>
+
+  document.getElementById('resultadoFrete').innerHTML = `<p>Calculando...</p>`;
+
+  try {
+ 
+    const dados = await res.json();
+
+    
+
+    const precoFormatado = Number(dados.preco).toFixed(2);
+    const totalFormatado = Number(dados.total).toFixed(2);
+
+    
+      <div style="margin-top:12px;">
+        <button id="pagarFreteBtn" class="botao">Pagar R$55,00 (checkout NuBank)</button>
+      </div>
+    `;
+
+    
+
+  
+});
+</script>
 </body>
 </html>
-
