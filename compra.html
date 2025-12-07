@@ -6,35 +6,38 @@
   <title>Comprar — MIL VIDAS EM UM ANO SÓ</title>
 
   <style>
-    /* Pequeno estilo inline para garantir bom visual sem depender de CSS externo */
     .container {
       max-width: 720px;
       margin: 32px auto;
       padding: 16px;
       font-family: Arial, sans-serif;
+      text-align: center;
     }
 
     .poster {
-      max-width: 200px;
+      max-width: 260px;
+      width: 100%;
       display: block;
-      margin-bottom: 16px;
+      margin: 0 auto 16px auto;
     }
 
     .botao {
-      padding: 10px 16px;
+      padding: 12px 20px;
       border: 0;
       border-radius: 6px;
       cursor: pointer;
       background: #007bff;
       color: white;
-      font-size: 16px;
+      font-size: 17px;
+      font-weight: bold;
     }
 
     .sinopse {
       margin-top: 14px;
       margin-bottom: 22px;
-      line-height: 1.5;
-      font-size: 16px;
+      line-height: 1.6;
+      font-size: 17px;
+      text-align: left;
     }
   </style>
 </head>
@@ -49,20 +52,20 @@
       <p>
         Em <strong>Mil Vidas em Um Ano Só</strong>, passado e presente se entrelaçam enquanto Frederick e Lina enfrentam reencontros,
         perdas e destinos que atravessam eras.
-        Uma história sobre amor, dor e renascimento  vivida de forma intensa, como se cada página carregasse mil vidas dentro de si.
+        Uma história sobre amor, dor e renascimento — vivida de forma intensa, como se cada página carregasse mil vidas dentro de si.
       </p>
     </div>
 
-    <p>Preço do livro: <strong>R$ 55,00</strong></p>
+    <p style="font-size:18px;">Preço do livro: <strong>R$ 55,00</strong></p>
 
     <div style="margin-top:18px;">
-      <button id="pagarBtn" class="botao">Pagar R$55,00</button>
+      <button id="pagarBtn" class="botao">Pagar R$ 55,00</button>
     </div>
   </div>
 
   <script>
-    // Aqui entra o link real do Mercado Pago
-    const MERCADO_PAGO_CHECKOUT = "#";
+    // Link de pagamento da TON
+    const MERCADO_PAGO_CHECKOUT = "https://payment-link-v3.ton.com.br/pl_nPrpxORVagM6z3kukJHXW09LqjzdGblQ";
 
     document.getElementById('pagarBtn').addEventListener('click', () => {
       window.location.href = MERCADO_PAGO_CHECKOUT;
@@ -70,3 +73,4 @@
   </script>
 </body>
 </html>
+
