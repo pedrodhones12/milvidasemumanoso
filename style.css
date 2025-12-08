@@ -70,4 +70,23 @@ h1 {
     font-size: 18px;
 }
 
+.comprar-agora {
+    display: inline-block;
+    background: linear-gradient(135deg, #C1121F, #8A0C16);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.comprar-agora:hover {
+    background: linear-gradient(135deg, #8A0C16, #C1121F);
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
 
